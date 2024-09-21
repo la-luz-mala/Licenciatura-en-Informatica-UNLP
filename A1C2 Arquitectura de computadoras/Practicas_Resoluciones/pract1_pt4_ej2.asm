@@ -13,7 +13,7 @@ org 3000h
     RET ; retorno al programa principal
 org 2000h
     MOV AL, A ; pueblo AL con la variable A
-    MOV BL, B ; pueblo BL con la variable B
+    MOV AH, B ; pueblo AH con la variable B
     mov CL, C 
     CALL CALC ; llamo la subrutina y paso los parámetros por registro, por valor
     mov D, DL
@@ -24,35 +24,68 @@ end
 ;a través de la pila. El resultado se devuelve de igual forma por el registro dl y por valor.
 
 org 1000h
-A db 8
-B db 5
-C db 4
-D db ?
+    A db 8
+    B db 5
+    C db 4
+    D db ?
+
 org 3000h
 CALC: push bx
-mov bx,sp
-__________
-mov dl, [bx]
-sub bx, 2
-__________
-sub bx, 2
-__________
-pop bx
-__________
+    mov bx,sp
+    add bx, 8 ; sumo 6 al stack pointer para pararme en A
+    mov dl, [bx]
+    sub bx, 2
+    SUB dl, [bx] ; resto C al contenido de B que cargue en DL
+    sub bx, 2
+    ADD dl, [bx] ; sumo A al contenido de C y D que cargue en DL
+    pop bx
+    RET ; vuelvo al programa principal
 org 2000h
-mov AL, A
-push AX
-_________
-push AX
-_________
-push AX
-call CALC
-mov D, DL
-______
-______
-______
+    mov AL, A
+    push AX
+    MOV AL, C ; paso C a AL para pushearlo a la pila
+    push AX
+    MOV AL, B ; paso B a AL para pushearlo a la pila
+    push AX
+    call CALC
+    mov D, DL
+    POP AX ; saco C de la pila
+    POP AX ; saco B de la pila
+    POP AX ; saco A de la pila
 hlt
 end
 
 ;C) Modificar el programa anterior para enviar los parámetros A, B y C a través de la pila pero ahora por
 ;referencia.
+
+org 1000h
+    A db 8
+    B db 5
+    C db 4
+    D db ?
+
+org 3000h
+CALC: push bx
+    mov bx,sp
+    add bx, 8 ; sumo 6 al stack pointer para pararme en A
+    mov dl, [bx]
+    sub bx, 2
+    SUB dl, [bx] ; resto C al contenido de B que cargue en DL
+    sub bx, 2
+    ADD dl, [bx] ; sumo A al contenido de C y D que cargue en DL
+    pop bx
+    RET ; vuelvo al programa principal
+org 2000h
+    mov AL, OFFSET A
+    push AX
+    MOV AL, C ; paso C a AL para pushearlo a la pila
+    push AX
+    MOV AL, B ; paso B a AL para pushearlo a la pila
+    push AX
+    call CALC
+    mov D, DL
+    POP AX ; saco C de la pila
+    POP AX ; saco B de la pila
+    POP AX ; saco A de la pila
+hlt
+end
