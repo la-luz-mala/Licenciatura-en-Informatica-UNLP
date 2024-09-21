@@ -1,6 +1,9 @@
+;--------------------------------------------------------;
 ;2) Pasaje de parámetros a través de registros y la pila⭐
 ;A) Completar las instrucciones del siguiente programa, que envía a una subrutina 3 valores A, B y C a
 ;través de registros AL, AH y CL, calcula AL+AH-CL, y devuelve el resultado en DL.
+;--------------------------------------------------------;
+
 org 1000h
     A db 8
     B db 5

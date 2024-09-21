@@ -1,6 +1,9 @@
+;--------------------------------------------------------;
 ;Parte 4: Pasaje de parámetros
 ;1) Tipos de Pasajes de Parámetros⭐ Indicar con un tilde, para los siguientes ejemplos, si el pasaje del
 ;parámetro es por registro o pila, y por valor o referencia:
+;--------------------------------------------------------;
+
 ;NOTA: Indicado con texto por conveniencia
 ;OPCIONES: A través de REGISTRO / PILA, por VALOR/REFERENCIA
 ;a)

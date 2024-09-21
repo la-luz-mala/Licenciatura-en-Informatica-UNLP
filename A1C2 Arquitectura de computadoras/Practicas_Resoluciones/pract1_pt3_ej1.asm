@@ -1,7 +1,10 @@
+;--------------------------------------------------------;
 ;1) Repaso de Conceptos de Pila y Subrutinas
 ;A) Uso de la pila ⭐Si el registro SP vale 8000h al comenzar el programa, indicar el valor del registro SP
 ;luego de ejecutar cada una de las instrucciones de la tabla, en el orden en que aparecen. Indicar, de la
 ;misma forma, los valores de los registros AX y BX.
+;--------------------------------------------------------;
+
 ;Instrucción Valor del registro SP AX BX
 ; INICIAL -- SP: 8000h; AX: ????; BX: ????
 1   mov ax,5 ; SP: 8000h (no se modifica); AX: 0005h; BX: ???? (no se modifica)
@@ -13,12 +16,13 @@
 7   pop bx ; SP: 7FFEh (+2 por push); AX: 0005h (no se modifica); BX: 0005h
 8   pop ax ; SP: 8000h (+2 por push); AX: 0005h (no se modifica); BX: 0005h (no se modifica)
 
-
+;--------------------------------------------------------;
 ;B) Llamadas a subrutinas y la pila⭐Si el registro SP vale 8000h al comenzar el programa, indicar el valor
 ;del registro SP luego de ejecutar cada instrucción. Considerar que el programa comienza a ejecutarse con el
 ;IP en la dirección 2000h, es decir que la primera instrucción que se ejecuta es la de la línea 5 (push ax).
 ;Nota: Las sentencias ORG y END no son instrucciones sino indicaciones al compilador, por lo tanto no se
 ;ejecutan.
+;--------------------------------------------------------;
 ; INICIAL -- SP: 8000h
 
 ;Instrucción Valor del registro SP
@@ -32,7 +36,7 @@
 8 hlt                   ;SP: 8000h (no se modifica por el hlt)
 9 end                   -----
 
-
+;--------------------------------------------------------;
 ;C) Llamadas a subrutinas y dirección de retorno⭐
 ;Si el registro SP vale 8000h al comenzar el programa, indicar el valor de SP y el contenido de la pila luego
 ;de ejecutar cada instrucción. Si el contenido es desconocido/basura, indicarlo con el símbolo ?. Considerar
@@ -42,6 +46,7 @@
 ;Además, explicar detalladamente:
 ;a) Las acciones que tienen lugar al ejecutarse la instrucción call rut
 ;b) Las acciones que tienen lugar al ejecutarse la instrucción ret
+;--------------------------------------------------------;
 
 org 3000h
 rut: mov bx,3 ; Dirección 3000h         ;SP: 7FFEh (no se modifica). Pila: al tope, 2002h. 2do llamado, al tope: 2006h
