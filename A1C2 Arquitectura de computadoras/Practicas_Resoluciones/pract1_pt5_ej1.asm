@@ -23,7 +23,7 @@ INIT DB "Ingresá la palabra a adivinar: "
 ADIV DB "Comenzá a adivinar!"
 WIN  DB "Ganaste!"
 LOSS DB "Perdiste, el string era "
-TRY  DB 3
+TRY  DB 50
 LONG DB 0
 PAL  DB ?
 RTA  DB ?
