@@ -99,3 +99,82 @@ MOV AL, OFFSET TOTAL - OFFSET MAS_IMPARES
 INT 7
 FINAL: INT 0
 END
+
+
+;--------------------------------------------------------------------------------------------------------------------------------------------
+
+;Activar PIO, PA y PB, ambos como SALIDA (EN 0)
+;declarar NOTA y DURACION
+;esperar 1 seg
+;cuando duracion = 0 se acaba
+
+EOI EQU 20H
+IMR EQU 21H
+INT1 EQU 25H
+ID_TIMER EQU 10
+
+PA EQU 30H
+PB EQU 31H
+CA EQU 32H
+CB EQU 33H
+
+CONT EQU 10H
+COMP EQU 11H
+
+ORG 1000h
+    D DB 10, 5, 7
+    N DB 60, 30, 80
+    FLAG DB 0 ; auxiliar
+
+ORG 40
+DIR_TIMER DW TIMER
+
+ORG 3000H
+TIMER:
+MOV AL, N ; cargo la nota
+ADD AL, CL ; le sumo el contador para ir iterando en el vector
+OUT PA, AL ; la envio a PA
+MOV AL, D ; cargo la duracion
+ADD AL, CL ; le sumo el contador para ir iterando en el vector
+OUT PB, AL ; la envio a pb
+MOV AL, 0 ;reseteo AL
+OUT CONT, AL ; reseteo el contador del timer
+INC CL ; incremento el contador auxiliar
+CMP CL, OFFSET N - OFFSET D ; comparo el contador auxiliar con el largo de N
+JNZ SALIR ; si NO terminé, salgo de la interrupción
+MOV FLAG, 1 ; si ya terminé con los datos, activo flag auxiliar
+MOV AL, 0FFH ; cierro interrupciones x IMR para q no siga iterando el timer hasta q termine
+OUT IMR, AL
+SALIR: MOV AL, 20H
+OUT EOI, AL ; end of interrupt
+IRET
+
+CONFIG_INICIAL: 
+;CA
+    MOV AL, 0
+    OUT CA, AL
+;CB
+    MOV AL, 0
+    OUT CB, AL
+;IMR
+    MOV AL, 11111101B
+    OUT IMR, AL 
+;INT0
+    MOV AL, ID_TIMER
+    OUT INT1, AL
+;TIMER
+    MOV AL, 0
+    OUT CONT, AL
+    MOV AL, 1
+    OUT COMP, AL
+RET
+
+ORG 2000H
+CLI
+CALL CONFIG_INICIAL
+MOV CX, 0 ; reseteo CX para contador auxiliar
+STI
+LOOP: CMP FLAG, 1 ;corta si Flag = 1
+JNZ LOOP
+INT 0
+END
