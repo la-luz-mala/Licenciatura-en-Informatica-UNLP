@@ -52,43 +52,43 @@ END
 ;-contar_pares: recibe a través de la pila la dirección de memoria donde empieza un vector, y además su longitud. Retorna la cantidad de valores pares del vector en el registro AX.
 ORG 1000h
 VECTOR DW 50, 15, 25, 12, 3, 5, 4, 3, 1
-PARES DW 0
+PARES DW 0 ; contador auxiliar
 MAS_PARES DB "Ganan los pares"
 MAS_IMPARES DB "Ganan los impares"
-TOTAL DW 0
+TOTAL DW 0 ; contador auxiliar
 
 ORG 3000H
 ES_PAR:
-    MOV DX, AX
-    AND DX, 1
-    JNZ IMPAR
-    INC DX
+    MOV DX, AX ; llevo el num a AX
+    AND DX, 1 ; XXXX XXXX AND 0000 00001 = 0000 0000 si el num es par, 0000 0001 si el num es impar
+    JNZ IMPAR ; si no da cero, es impar
+    INC DX ; si no salto a IMPAR, incremento DX para devolver 1 por consigna
     JMP SALIR
-IMPAR: DEC DX
+IMPAR: DEC DX ; si es impar, decremento DX para devolver 0 por consigna
 SALIR: RET
 
 CONTAR_PARES:
-    MOV BX, SP
-    ADD BX, 2
-    MOV BX, [BX]
-    LOOP: CMP BX, OFFSET PARES
-    JZ FIN
-    MOV AX, [BX]
-    CALL ES_PAR
-    ADD PARES, DX
-    INC TOTAL
-    ADD BX, 2
-    JMP LOOP
-FIN: MOV AX, PARES
+    MOV BX, SP ; stack pointer a BX
+    ADD BX, 2 ; lo aumento en 2 para recuperar donde está la dirección del vector
+    MOV BX, [BX] ; envío la dirección del vector a la pila
+    LOOP: CMP BX, OFFSET PARES ; comparo la dirección con la siguiente variable para no pasarme
+    JZ FIN ; si son iguales, terminé
+    MOV AX, [BX] ; mando a AX el número al que apunta la posición de memoria
+    CALL ES_PAR ; llamo la rutina ES_PAR
+    ADD PARES, DX ; sumo DX a PARES: si es impar, traigo 0 y la suma es irrelevante
+    INC TOTAL ; aumento el total de números
+    ADD BX, 2 ; paso a la sgte posición de memoria
+    JMP LOOP ; salto
+FIN: MOV AX, PARES ; devuelvo PARES por AX por consigna
 RET
 
 ORG 2000H
-    MOV BX, OFFSET VECTOR
-    PUSH BX
-    CALL CONTAR_PARES
-    MOV CX, TOTAL
-    SUB CX, PARES
-    SUB PARES, CX
+    MOV BX, OFFSET VECTOR ; paso la dirección de inicio del vector a BX
+    PUSH BX ; y a la pila
+    CALL CONTAR_PARES ; llamo la subrutina
+    MOV CX, TOTAL ; pongo TOTAL en CX
+    SUB CX, PARES ; resto PARES a TOTAL - la diferencia es la cant de números impares, que queda en CX
+    SUB PARES, CX ; si da negativo, hay más impares que pares
     JS GANAN_PARES
     MOV BX, OFFSET MAS_PARES
     MOV AL, OFFSET MAS_IMPARES - OFFSET MAS_PARES
