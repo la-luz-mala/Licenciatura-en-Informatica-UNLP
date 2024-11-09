@@ -1,0 +1,12 @@
+3. Tipos de variables enWinMIPS64⭐
+Indicar qué tamaño (en bytes) ocupan cada uno de estos tipos de datos del simulador WinMIPS64. En el caso en que
+dos tipos de datos tengan el mismo tamaño, explicar sus diferencias:
+Tipo de dato + Tamaño en bytes + Uso
+space 1 > 1 byte > se usa para inicializar una variable con 1 byte pero no asignarle valor
+ascii > 1 byte por caracter > se usa para guardar cadenas de texto, números y símbolos
+asciiz > 1 byte por caracter + 0 al final > se usa para guardar cadenas de texto, números y símbolos
+byte > 1 byte > almacenar un valor de 8 bits
+word16 > 2 bytes > almacenar un valor de 16 bits
+word32 > 4 bytes > almacenar un valor de 32 bits
+word > 8 bytes > almacenar un valor de 64 bits
+double > 16 bytes > almacenar un valor de 128 bits (doble precisión - punto flotante)

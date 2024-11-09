@@ -1,0 +1,32 @@
+Parte 1: Introducción al set de instrucciones delWinMIPS64
+1. Tipos de instrucciones enWinMIPS64⭐
+Para cada una de las siguientes instrucciones del WinMIPS64, indicar si son instrucciones de salto incondicional (SI), salto condicional (SC), de lectura de memoria (LMEM), escritura de memoria (EMEM), o aritmético-lógicas (AL):
+and         AL - AND R1, R2, R3 -> R1 = R2 and R3
+andi        AL - AND R1, R2, 1 -> R1 = R2 and 1
+beq         SC - BEQ R1, R2, SALTO -> ir a SALTO si R1 = R2
+bne         SC - BNE R1, R2, SALTO -> ir a SALTO si R1 != R2
+beqz        SC - BEQZ R1, SALTO -> ir a SALTO si R1 = 0
+bnez        SC - BEQZ R1, SALTO -> ir a SALTO si R1 != 0
+dadd        AL - DADD R1, R2, R3 -> R1 = R2 + R3
+daddi       AL - DADD R1, R2, 5 -> R1 = R2 + 5
+dmul        AL - DMUL R1, R2, R3 -> R1 = R2 * R3
+ddiv        AL - DDIV R1, R2, R3 -> R1 = R2 / R3
+halt        Ninguna, es general - detiene la operación
+nop         Ninguna, es general - no hace nada
+or          AL - OR R1, R2, R3 -> R1 = R2 or R3
+ori         AL - OR R1, R2, 1 -> R1 = R2 or 1
+slt         AL - SLT R1, R2, R3 -> R1 = 1 si R2 < R3, R1 = 0 si R2 > R3
+slti        AL - SLT R1, R2, 5 -> R1 = 1 si R2 < 5, R1 = 0 si R2 > 5
+j           SI - J LAZO, salto no condicional
+jal         SI - JAL SUBR, salto no condicional que guarda la dirección de retorno
+jr          SI - JR R1, salta a la dirección contenida en R1
+ld          LMEM - LD R1, VAR1 -> carga VAR1 en R1
+lb          LMEM - LB R1, VAR1 -> carga 1 byte de VAR1 en R1 y extiende el signo - rellena los otros bits que quedan de espacio con F si es negativo, con 0 si es positivo.
+lbu         LMEM - LB R1, VAR1 -> carga 1 byte de VAR1 en R1, NO extiende el signo - rellena con 0 solamente
+lw          LMEM - Mismo que LB pero con word
+lwu         LMEM - Mismo que LBU pero con word
+sb          EMEM - LD R1, VAR1 -> guarda el primer byte de R1 en VAR1
+sd          EMEM - LD R1, VAR1 -> guarda el contenido de R1 en VAR1
+sw          EMEM - LD R1, VAR1 -> guarda 1 word de R1 en VAR1
+xor         AL - XOR R1, R2, R3 -> R1 = R2 xor R3
+xori        AL - XOR R1, R2, 5 -> R1 = R2 xor 5

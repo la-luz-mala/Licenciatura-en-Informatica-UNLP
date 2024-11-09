@@ -1,0 +1,26 @@
+2. VonSim vsWinMIPS64⭐
+Indicar qué instrucciones se corresponden entre el simulador VonSim y el simulador WinMIPS64. Tener en cuenta que algunas de las instrucciones del VonSim pueden hacerse de distintas formas en WinMIPS64. y otras no pueden
+hacerse con una sola instrucción. Por ende, algunas instrucciones de la columna izquierda corresponden a varias de
+la derecha, y otras no corresponden a ninguna
+Nota: para simplificar, usaremos los registros del WinMIPS64 (r0 a r31) como nombres de registro en las
+instrucciones del VonSim.
+VonSim          >                WinMIPS64
+mov r1, r2                       dadd r1, r0, r2, daddi r1, r2, 0
+mov r1, 1                        daddi r1, r0, 1
+mov r1, 0                        daddi r1, r0, 0     dadd r1, r0, r0
+add r1, r2                       dadd r1, r1, r2
+add r1, 1                        daddi r1, r1, 1
+add r1, 0                        dadd r1, r1, r0
+inc r1                           daddi r1, r1, 1
+dec r1                           daddi r1, r1, -1
+or r1, r2                        or r1, r1, r2
+or r1, 1                         ori r1, r1, 1
+or r1, 0                         or r1, r1, r0
+mov r1, variable                 ld r1, variable(r0), daddi r1, r0, variable
+mov variable, r1                 sd r1, variable(r0)
+add r1, variable                 << 2 instrucciones: ld r2, variable(r0) y dadd r1, r1, r2 xq dadd no puede usarse con posiciones de memoria directamente
+add variable, r1                 << 3 instrucciones: ld r2, variable(r0), dadd r3, r1, r2 y sd r3, variable
+mov r1, offset variable          << no está en el set de instrucciones pero la es load address: la r1, variable
+jump etiqueta                    j etiqueta
+call etiqueta                    jal etiqueta
+hlt                              halt
