@@ -1,0 +1,45 @@
+1. Comprendiendo la primer subrutina: potencia⭐
+Muchas instrucciones que normalmente forman parte del repertorio de un procesador con arquitectura CISC
+no existen en el MIPS64. En particular, el soporte para la invocación a subrutinas es mucho más simple que
+el provisto en la arquitectura x86 (pero no por ello menos potente). El siguiente programa muestra un
+ejemplo de invocación a una subrutina llamada potencia:
+.data
+    base: .word 5
+    exponente: .word 4
+    result: .word 0
+.code
+    ld $a0, base($zero)             # Cargo BASE (5) en a0
+    ld $a1, exponente($zero)        # Cargo EXPONENTE (4) en a1
+    jal potencia                    # Llamo a Potencia
+    sd $v0, result($zero)           # cargo el resultado en result
+halt
+    potencia:daddi $v0, $zero, 1    # Seteo v0 en 1
+    lazo:bnez $a1, terminar         # a1 = 0? Si = 0, salimos de la subrutina --> ERROR: DEBERIA SER BEQZ
+    daddi $a1, $a1, -1              # Sino: Resto 1 a a1
+    dmul $v0, $v0, $a0              # multiplico v0 por a0
+    j lazo                          # salto a lazo
+    terminar:jr $ra                 # vuelvo al programa
+
+
+a) ¿Qué hace el programa? ¿Cómo está estructurado el código del mismo?ç
+El programa realiza una operación de potencia: multiplica el número en base por si mismo tantas veces como indica el 
+número en potencia. Ej si base = 5 y potencia = 4 hará 5x5x5x5.
+Para esto, como sólo puede hacer una multiplicación a la vez, va guardando el resultado en v0 y acumulando mientras
+decrementa exponente, que funcioan como índice.
+
+b) ¿Qué acciones produce la instrucción jal? ¿Y la instrucción jr?
+JAL permite saltar a la rutina y conservar la dirección de retorno en $ra.
+JR permite saltar a la dirección de retorno.
+
+c) ¿Qué valor se almacena en el registro $ra? ¿Qué función cumplen los registros $a0 y $a1? ¿Y el
+registro $v0? ¿Qué valores posibles puede recibir en $a0 y $a1 la subrutina potencia?
+$ra almacena el valor de retorno, es decir de la instrucción siguiente al llamado a la subrutina.
+$a0 y $a1 son valores reservados para los parámetros de la subrutina. En este caso, puede tomar valores enteros 
+positivos / negativos.
+
+d) Supongamos que el WinMIPS no posee la instrucción dmul ¿Qué sucede si la subrutina potencia
+necesita invocar a otra subrutina para realizar la multiplicación en lugar de usar la instrucción dmul?
+¿Cómo sabe cada una de las subrutinas a que dirección de memoria debe retornar?
+En caso de tener que invocar a otra subrutina, deberíamos guardar la dirección de retorno en la pila mediante 
+restar 8 al SP (o más, si guardamos más cosas) y copiar ahí la $ra. Luego tras llamar la otra subrutina, rescatamos
+el $ra.
