@@ -1,0 +1,251 @@
+// 1. Realizar un programa que lea 2 números enteros desde teclado e informe en pantalla cuál de los dos
+// números es el mayor. Si son iguales debe informar en pantalla lo siguiente:
+// Los números leídos son iguales
+
+Program uno;
+var
+    a,b: integer;
+begin
+    writeln('Ingrese el primer número.');
+    read(a);
+    writeln('Ingrese el segundo número.');
+    read(b);
+    if (a > b) then
+        writeln(a,' es mayor que ',b)
+    else
+        if (a = b) then
+            writeln('Los números leídos son iguales')
+        else
+            writeln(b,' es mayor que ',a)
+end.
+
+// 2. Realizar un programa que lea un número real e imprima su valor absoluto. El valor absoluto de un número
+// X, se escribe |X| y se define como:
+// |X| = X cuando X es mayor o igual a cero
+// |X| = -X cuando X es menor a cero
+
+Program dos;
+var
+    x:real;
+begin
+    writeln('Ingrese un valor:');
+    read(x);
+    if (x < 0) then
+        x:= x * -1;
+    writeln('Valor absoluto: ', x);
+end.
+
+// 3. Realizar un programa que lea 3 números enteros y los imprima en orden descendente. Por ejemplo: si se
+// ingresan los valores 4, -10 y 12, deberá imprimir: 12 4 -10
+
+Program tres;
+var
+    a,b,c:integer;
+begin
+    writeln('Ingrese tres números enteros: ');
+    read(a);
+    read(b);
+    read(c);
+    if (a > b) then
+        if (b > c) then
+            writeln(a,', ',b,', ',c)
+        else
+            if (a > c) then
+                writeln(a,', ',c,', ',b)
+            else
+                writeln(c,', ',a,', ',b)
+    else
+        if (b > c) then
+            if (a > c) then
+                writeln(b,', ',a,', ',c)
+            else
+                writeln(b,', ',c,', ',a)
+        else
+            writeln(c,', ',b,', ',a)
+End.
+
+
+// 4. Realizar un programa que lea un número real X. Luego, deberá leer números reales hasta que se ingrese
+// uno cuyo valor sea exactamente el doble de X (el primer número leído).
+Program cuatro;
+var
+    x,y:real;
+begin
+    writeln('Ingrese un número: ');
+    read(x);
+    y:= x*2;
+    while(x <> y) do
+        Begin
+            writeln('Ingrese el doble: ');
+            read(x)
+        end;
+    writeln(y, ' es el doble.')
+End.
+//Alternativa más simple:
+Program cuatro;
+var
+    x,y:real;
+begin
+    read(x);
+    y:= x*2;
+    while(x <> y) do
+        read(x)
+End.
+
+// 5. Modifique el ejercicio anterior para que, luego de leer el número X, se lean a lo sumo 10 números reales.
+// La lectura deberá finalizar al ingresar un valor que sea el doble de X, o al leer el décimo número, en cuyo
+// caso deberá informarse: No se ha ingresado el doble de X
+
+Program cinco;
+var
+    x,y,i:real;
+begin
+    i:=0;
+    writeln('Ingrese un número: ');
+    read(x);
+    y:= x*2;
+    while (x <> y) and (i <> 10) do
+        Begin
+            writeln('Ingrese el doble: ');
+            read(x);
+            i:= i+1
+        end;
+    if (x <> y) then
+        writeln('No se ingresó el doble.')
+    else
+        writeln(y, ' es el doble.')
+End.
+
+// 6. Realizar un programa que lea el número de legajo y el promedio de cada alumno de la facultad. La lectura
+// finaliza cuando se ingresa el legajo -1, que no debe procesarse. Por ejemplo: se lee la siguiente secuencia:
+// 33423
+// 8.40
+// 19003
+// 6.43
+// -1
+// En el ejemplo anterior, se leyó el legajo 33422, cuyo promedio fue 8.40, luego se leyó el legajo 19003, cuyo
+// promedio fue 6.43, y finalmente el legajo -1 (para el cual no es necesario leer un promedio).
+// Al finalizar la lectura, informar:
+// a. La cantidad de alumnos leída (en el ejemplo anterior, se debería informar 2).
+// b. La cantidad de alumnos cuyo promedio supera 6.5 (en el ejemplo anterior, se debería informar 1).
+// c. El porcentaje de alumnos destacados (alumnos con promedio mayor a 8.5) cuyo legajo sean menor
+// al valor 2500 (en el ejemplo anterior, se debería informar 0%).
+
+Program uno;
+var
+    leg,alu,aprob,destac:integer;
+    prom:real;
+Begin
+    alu:=0;
+    aprob:=0;
+    destac:=0;
+    writeln('Ingrese legajo:');
+    read(leg);
+    while(leg <> -1) do
+        begin
+            alu:=alu+1;
+            writeln('Ingrese promedio:');
+            read(prom);
+            if (prom > 6.5) then
+                if (prom > 8.5) then
+                    destac:=destac+1
+                else
+                    aprob:=aprob+1;
+            writeln('Ingrese legajo:');
+            read(leg)
+        end;
+    writeln('Se leyeron ',alu,' alumnos.');
+    writeln(aprob,' alumnos tienen promedio mayor a 6.5.');
+    writeln(destac,' alumnos tienen promedio mayor a 8.5.');
+End.
+
+
+// 7. Realizar un programa que lea el código, el precio actual y el nuevo precio de los productos de un almacén.
+// La lectura finaliza al ingresar el producto con el código 32767, el cual debe procesarse. Para cada producto
+// leído, el programa deberá indicar si el nuevo precio del producto supera en un 10% al precio anterior.
+// Por ejemplo:
+// ○ Si se ingresa el código 10382, con precio actual 40 y nuevo precio 44, deberá imprimir:
+// El aumento de precio del producto 10382 no supera el 10%
+// ○ Si se ingresa el código 32767, con precio actual 30 y nuevo precio 33,01, deberá imprimir:
+// El aumento de precio del producto 32767 es superior al 10%”
+Program siete;
+var
+    codigo:integer;
+    precio,nuevoprecio: real;
+Begin
+    writeln('Ingrese el código del producto.');
+        read(codigo);
+        while(codigo<>32767) do
+            begin
+                writeln('Ingrese el precio actual del producto.');
+                read(precio);
+                writeln('Ingrese el nuevo precio del producto.');
+                read(nuevoprecio);
+                if (nuevoprecio > (precio * 1.1)) then
+                    writeln('El aumento de precio del producto ',codigo,' es superior al 10%.')
+                else
+                    writeln('El aumento de precio del producto ',codigo,' no supera el 10%.');
+                writeln('Ingrese el código del producto.');
+                read(codigo)
+            end;
+end.
+
+// 8. Realizar un programa que lea tres caracteres, e informe si los tres eran letras vocales o si al menos uno de
+// ellos no lo era. Por ejemplo:
+// ○ Si se leen los caracteres “a e o”, deberá informar: Los tres son vocales
+// ○ Si se leen los caracteres “z a g”, deberá informar: Al menos un carácter no era vocal
+Program ocho;
+var
+    contletra,i:integer;
+    letra:char;
+Begin
+    contletra:=0;
+    for i:=1 to 3 do
+        begin
+            writeln('Ingrese una letra:');
+            readln(letra);
+            case letra of
+                'a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U': contletra:=contletra+1;
+            end;
+        end;
+        if (contletra < 3) then
+            writeln('Al menos un carácter no era vocal')
+        else
+            writeln('Las tres son vocales');
+End.
+
+
+// 9. Realizar un programa que lea un carácter, que puede ser “+” (suma) o “-” (resta); si se ingresa otro carácter,
+// debe informar un error y finalizar. Una vez leído el carácter de suma o resta, deberá leerse una secuencia
+// de números enteros que finaliza con 0. El programa deberá aplicar la operación leída con la secuencia de
+// números, e imprimir el resultado final.
+// Por ejemplo:
+// ○ Si se lee el carácter “-” y la secuencia 4 3 5 -6 0 , deberá imprimir: 2 (4 – 3 – 5 - (-6) )
+// ○ Si se lee el carácter “+” y la secuencia -10 5 6 -1 0, deberá imprimir: 0 (-10 + 5 + 6 + (-1))
+Program nueve;
+var
+    total,num:integer;
+    caracter:char;
+Begin
+writeln('Ingrese el caracter de la operación:');
+readln(caracter);
+if ((caracter='+') or (caracter='-')) then
+    begin
+        writeln('Ingrese un número mayor a cero, o cero para terminar:');
+        readln(num);
+        total:=num;
+        while (num<>0) do
+            begin
+                writeln('Ingrese un nuevo número, o cero para terminar:');
+                read(num);
+                if (num <> 0) then
+                    if (caracter='+') then
+                        total:=total+num
+                    else
+                        total:=total-num;
+            end;
+        writeln('El total es ',total);
+    end
+else
+    writeln('Caracter incorrecto');
+End.
