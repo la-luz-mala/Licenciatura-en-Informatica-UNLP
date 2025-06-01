@@ -1,0 +1,382 @@
+// 1. Realizar un programa que lea 10 números enteros e informe la suma total de los números leídos.
+Program uno;
+var
+    sum,num,i:integer;
+begin
+    sum:=0;
+    for i:=0 to 9 do
+        begin
+            writeln('Ingrese un número entero:');
+            readln(num);
+            sum:=sum+num;
+        end;
+    writeln('La suma de los números es ',sum);
+end.
+// a. Modifique el ejercicio 1 para que además informe la cantidad de números mayores a 5.
+Program uno;
+var
+    sum,num,i,cont:integer;
+begin
+    sum:=0;
+    cont:=0;
+    for i:=0 to 9 do
+        begin
+            writeln('Ingrese un número entero:');
+            readln(num);
+            sum:=sum+num;
+            if (num > 5) then
+                cont:=cont+1;
+        end;
+    writeln('La suma de los números es ',sum);
+    writeln(cont,' son mayores que 5.')
+end.
+
+// 2. Realice un programa que lea 10 números e informe cuál fue el mayor número leído. Por ejemplo: si se lee la
+// secuencia: 3 5 6 2 3 10 98 8 -12 9, deberá informar:
+// El mayor número leído fue el 98
+Program dos;
+var
+    num,may,i:integer;
+begin
+    may:=-255;
+    for i:=0 to 9 do
+        begin
+            writeln('Ingrese un número');
+            read(num);
+            if (num > may) then
+                may:=num;
+        end;
+    writeln('El mayor número leído fue el ', may);
+end.
+
+// a. Modifique el programa anterior para que, además de informar el mayor número leído, se informe el
+// número de orden, dentro de la secuencia, en el que fue leído. Por ejemplo: si se lee la misma
+// secuencia: 3 5 6 2 3 10 98 8 -12 9, deberá informar:
+// El mayor número leído fue el 98, en la posición 7
+Program dos;
+var
+    num,may,i,pos:integer;
+begin
+    may:=-255;
+    for i:=1 to 10 do
+        begin
+            writeln('Ingrese un número');
+            read(num);
+            if (num > may) then
+                may:=num;
+                pos:=i;
+        end;
+    writeln('El mayor número leído fue el ', may,', en la posición ', pos);
+end.
+
+
+// 3. Realizar un programa que lea desde teclado la información de alumnos ingresantes a la carrera Analista en
+// TIC. De cada alumno se lee nombre y nota obtenida en el módulo EPA (la nota es un número entre 1 y 10).
+// La lectura finaliza cuando se lee el nombre “Zidane Zinedine“, que debe procesarse. Al finalizar la lectura
+// informar:
+// ● La cantidad de alumnos aprobados (nota 8 o mayor).
+// ● La cantidad de alumnos que obtuvieron un 7 como nota.
+Program tres;
+var
+    alu:string;
+    aprobados,siete,nota:integer;
+begin
+    aprobados:=0;
+    siete:=0;
+    repeat
+        begin
+            writeln('Ingrese el nombre:');
+            readln(alu);
+            writeln('Ingrese la nota:');
+            readln(nota);
+            if(nota=>8) then
+                aprobados:=aprobados+1
+            else
+                if(nota = 7) then
+                    siete:=siete+1;
+        end;
+    until (alu='Zidane Zinedine');
+    writeln('La cantidad de alumnos aprobados fue de ',aprobados);
+    writeln('La cantidad de alumnos con nota 7 fue de ',siete);
+end.
+
+// 4. Realizar un programa que lea 1000 números enteros desde teclado. Informar en pantalla cuáles son los dos
+// números mínimos leídos.
+Program cuatro;
+var
+    min,min2,num,i:integer;
+begin
+    writeln('Ingrese un número');
+    read(min2);
+    writeln('Ingrese un número');
+    read(num);
+    if (num < min2) then
+        min:=num
+    else
+        begin
+            min:=min2;
+            min2:=num;
+        end;
+    for i:=1 to 998 do
+        begin
+            writeln('Ingrese un número');
+            readln(num);
+            if (num < min) then
+                min:=num
+            else
+                if (num < min2) then
+                    min2:=num
+        end;
+    writeln('Los dos números más chicos son ',min,' y ',min2);
+end.
+
+// a. Modifique el ejercicio anterior para que, en vez de leer 1000 números, la lectura finalice al leer el
+// número 0, el cual debe procesarse.
+Program cuatro;
+var
+    min,min2,num,i:integer;
+begin
+    writeln('Ingrese un número');
+    read(min2);
+    if (min2 <> 0) then
+        begin
+            writeln('Ingrese un número');
+            read(num);
+            if (num < min2) and (num <> 0) then
+                min:=num
+            else
+                begin
+                    min:=min2;
+                    min2:=num;
+                end;
+            repeat
+                begin
+                    writeln('Ingrese un número');
+                    readln(num);
+                    if (num < min) then
+                        min:=num
+                    else
+                        if (num < min2) then
+                            min2:=num
+                end;
+            until (num = 0);
+            writeln('Los dos números más chicos son ',min,' y ',min2);
+        end;
+end.
+// b. Modifique el ejercicio anterior para que, en vez de leer 1000 números, la lectura finalice al leer el
+// número 0, el cual no debe procesarse.
+Program cuatro;
+var
+    min,min2,num,i:integer;
+begin
+    writeln('Ingrese un número');
+    read(min2);
+    if (min2 <> 0) then
+        begin
+            writeln('Ingrese un número');
+            read(num);
+            if (num <> 0) then
+                begin
+                    if (num < min2) then
+                        min:=num
+                    else
+                        begin
+                            min:=min2;
+                            min2:=num;
+                        end;
+                    while (num <> 0) do
+                        begin
+                            writeln('Ingrese un número');
+                            readln(num);
+                            if (num < min) and (num <> 0) then
+                                min:=num
+                            else
+                                if (num < min2) and (num <> 0) then
+                                    min2:=num
+                        end;
+                    writeln('Los dos números más chicos son ',min,' y ',min2);
+                end;
+        end;
+end.
+
+// 5. Realizar un programa que lea números enteros desde teclado. La lectura debe finalizar cuando se ingrese el
+// número 100, el cual debe procesarse. Informar en pantalla:
+// ● El número máximo leído.
+// ● El número mínimo leído.
+// ● La suma total de los números leídos.
+Program cinco;
+var
+    max,min,num,sum:integer;
+begin
+    min:= 256;
+    max:= -256;
+    sum:= 0;
+    repeat
+        writeln('Ingrese un número entero:');
+        readln(num);
+        if(num > max) then
+            max:=num;
+        if(num < min) then
+            min:=num;
+        sum:=sum+num;
+    until (num=100); 
+    writeln('El número más grande fue ',max);
+    writeln('El número más chico fue ',min);
+    writeln('La suma de los números es ',sum);
+end.
+
+// 6. Realizar un programa que lea información de 200 productos de un supermercado. De cada producto se lee
+// código y precio (cada código es un número entre 1 y 200). Informar en pantalla:
+// ● Los códigos de los dos productos más baratos.
+// ● La cantidad de productos de más de 16 pesos con código par.
+Program seis;
+var
+    precio,codigo,min1,min2,codmin1,codmin2,dieciseis,i:integer;
+begin
+    //Inicializo los minimos
+    min1:= 256;
+    min2:= 256;
+    //Inicializo el contador de $16+ código par
+    dieciseis:=0;
+    for i:=1 to 200 do
+        begin
+            writeln('Ingrese un código');
+            readln(codigo);
+            writeln('Ingrese un precio');
+            readln(precio);
+            if (precio < min2) then
+                if (precio < min1) then
+                    begin
+                        min2:=min1;
+                        codmin2:=codmin1;
+                        min1:= precio;
+                        codmin1:= codigo;
+                    end
+                else
+                    begin
+                        min2 := precio;
+                        codmin2:= codigo;
+                    end;
+            if (codigo mod 2=0) and (precio > 16) then
+                dieciseis:=dieciseis+1;
+        end;
+    writeln('Los productos más baratos son: código ',codmin1,' de $',min1,' y código ',codmin2,' de $',min2,'.');
+    writeln('Hay ',dieciseis,' productos de más de $16 con código par.');
+end.
+
+// 7. Realizar un programa que lea desde teclado información de autos de carrera. Para cada uno de los autos se
+// lee el nombre del piloto y el tiempo total que le tomó finalizar la carrera. En la carrera participaron 100
+// autos. Informar en pantalla:
+// ● Los nombres de los dos pilotos que finalizaron en los dos primeros puestos.
+// ● Los nombres de los dos pilotos que finalizaron en los dos últimos puestos.
+
+Program siete;
+var
+pri,seg,ult,anteult,nombre:string;
+i,min1,min2,max1,max2,tiempo:integer;
+begin
+    min1:=256;
+    min2:=256;
+    max1:=-1;
+    max2:=-1;
+    pri:='';
+    seg:='';
+    ult:='';
+    anteult:='';
+    for i:=1 to 5 do
+        begin
+            writeln('Ingrese el nombre del piloto.');
+            readln(nombre);
+            writeln('Ingrese el tiempo.');
+            readln(tiempo);
+            if (tiempo < min2) then
+                if (tiempo < min1) then
+                    begin
+                        min2:=min1;
+                        seg:=pri;
+                        min1:=tiempo;
+                        pri:=nombre;
+                    end
+                else
+                    begin
+                        min2:=tiempo;
+                        seg:=nombre;
+                    end;
+            if(tiempo > max2) then
+                if (tiempo > max1) then
+                    begin
+                        max2:=max1;
+                        anteult:=ult;
+                        max1:=tiempo;
+                        ult:=nombre;
+                    end
+                else
+                    begin
+                        max2:=tiempo;
+                        ult:=nombre;
+                    end
+        end;
+    writeln('El primero fue ',pri,' con ',min1,' segundos.');
+    writeln('El segundo fue ',seg,' con ',min2,' segundos.');
+    writeln('El anteúltimo fue ',anteult,' con ',max2,' segundos.');
+    writeln('El último fue ',ult,' con ',max1,' segundos.');
+end.
+
+// 8. Un local de ropa desea analizar las ventas realizadas en el último mes. Para ello se lee por cada día del mes,
+// los montos de las ventas realizadas. La lectura de montos para cada día finaliza cuando se lee el monto 0. Se
+// asume un mes de 31 días. Informar la cantidad de ventas por cada día, y el monto total acumulado en ventas
+// de todo el mes.
+Program ocho;
+var
+    dia,monto,cont,suma:integer;
+Begin
+    suma:=0;
+    cont:=0;
+    for dia:=1 to 5 do
+        begin
+            writeln('Ingrese el monto');
+            readln(monto);
+            while (monto <> 0) do
+                begin
+                    suma:=suma+monto;
+                    cont:=cont+1;
+                    writeln('Ingrese el monto');
+                    readln(monto);
+                end;
+                writeln('El día ',dia,' las ventas totales fueron ',cont);
+                cont:=0;
+        end;
+    writeln('El monto total del mes es de $',suma);
+End.
+// a. Modifique el ejercicio anterior para que además informe el día en el que se realizó la mayor cantidad
+// de ventas.
+Program ocho;
+var
+    max,diamax,dia,monto,cont,suma:integer;
+Begin
+    suma:=0;
+    cont:=0;
+    max:=-1;
+    diamax:=0;
+    for dia:=1 to 5 do
+        begin
+            writeln('Ingrese el monto');
+            readln(monto);
+            while (monto <> 0) do
+                begin
+                    suma:=suma+monto;
+                    cont:=cont+1;
+                    writeln('Ingrese el monto');
+                    readln(monto);
+                end;
+                writeln('El día ',dia,' las ventas totales fueron ',cont);
+                if (cont > max) then
+                    begin
+                        max:= cont;
+                        diamax:=dia;
+                    end;
+                cont:=0;
+        end;
+    writeln('El monto total del mes es de $',suma);
+    writeln('El día que más se vendió fue el ',diamax,' con ',max,' ventas.');
+End.
