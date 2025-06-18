@@ -1,0 +1,103 @@
+// Actividad 1: Revisando Inversiones
+// Realizar un programa que analice las inversiones de las empresas más grandes del país. Para cada
+// empresa se lee su código (un número entero), la cantidad de inversiones que tiene, y el monto
+// dedicado a cada una de las inversiones. La lectura finaliza al ingresar la empresa con código 100,
+// que debe procesarse.
+// El programa deberá informar:
+// ● Para cada empresa, el monto promedio de sus inversiones
+// ● Código de la empresa con mayor monto total invertido
+// ● Cantidad de empresas con inversiones de más de $50000
+// Por ejemplo:
+// Ingrese un código de empresa: 33
+// Ingrese la cant. de inversiones: 4
+// Ingrese el monto de cada inversión: 33200 56930 24500.85 10000
+// Resultado del análisis: Empresa 33 Monto promedio 31157,71
+// Ingrese un código de empresa: 41
+// Ingrese la cant. de inversiones: 3
+// Ingrese el monto de cada inversión: 102000.22 53000 12000
+// Resultado del análisis: Empresa 41 Monto promedio 55666,74
+// Ingrese un código de empresa: 100
+// Ingrese la cant. de inversiones: 1
+// Ingrese el monto de cada inversión: 84000.34
+// Resultado del análisis: Empresa 100 Monto promedio 84000.34
+// (Fin de la lectura)
+// La empresa 41 es la que mayor dinero posee invertido ($167000.22).
+// Hay 3 empresas con inversiones por más de $50000
+Program uno;
+var
+    i,
+    top,cont,
+    cant,
+    codigo,
+    inversiones:integer;
+    max, sum, monto: longint;
+    promedio:real;
+begin
+    top:=0;
+    max:=-1;
+    cont:=0;
+    writeln('Ingrese código de la empresa');
+    readln(codigo);
+    while(codigo <> 100) do
+        begin
+            sum:=0;
+            cant:=0;
+            writeln('Ingrese la cantidad de inversiones');
+            readln(inversiones);
+            writeln('Ingrese el monto de cada inversión');
+            for i:=1 to inversiones do
+                begin
+                    readln(monto);
+                    sum:=sum + monto;
+                end;
+            promedio:= sum/inversiones;
+            writeln('El promedio de inversiones de la empresa cod. ',codigo,' es de $',promedio);
+            if(sum > max) then
+                begin
+                    max:=sum;
+                    top:=codigo;
+                end;
+            if(sum > 50000) then
+                cont:=cont+1;
+            writeln('Ingrese código de la empresa');
+            readln(codigo);
+        end;
+        writeln('La empresa con mayor monto invertido es ',top);
+        writeln('La cantidad de empresas con inversiones de más de $50.000 es ',cont);
+end.
+
+
+// Actividad 2: procesamiento de las autoevaluaciones de CADP
+// La cátedra de CADP está analizando los resultados de las autoevaluaciones que realizaron los
+// alumnos durante el cuatrimestre. Realizar un programa que lea, para cada alumno, su legajo, su
+// condición (I para INGRESANTE, R para RECURSANTE), y la nota obtenida en cada una de las 5
+// autoevaluaciones. Si un alumno no realizó alguna autoevaluación en tiempo y forma, se le cargará la
+// nota -1. La lectura finaliza al ingresar el legajo -1. Por ejemplo, si la materia tuviera dos alumnos, un
+// ingresante y un recursante, la lectura podría ser así:
+// Legajo: 19003
+// Condición: R
+// Notas: 8 10 6 -1 8
+// Legajo 21020
+// Condición: I
+// Notas: 4 0 6 10 -1
+// Legajo -1
+// (Fin de la lectura)
+// Una vez ingresados todos los datos, el programa debe informar:
+// - Cantidad de alumnos INGRESANTES en condiciones de rendir el parcial y porcentaje sobre el
+// total de alumnos INGRESANTES.
+// - Cantidad de alumnos RECURSANTES en condiciones de rendir el parcial y porcentaje sobre el
+// total de alumnos RECURSANTES.
+// - Cantidad de alumnos que aprobaron todas las autoevaluaciones
+// - Cantidad de alumnos cuya nota promedio fue mayor a 6.5 puntos
+// - Cantidad de alumnos que obtuvieron cero puntos en al menos una autoevaluación.
+// - Código de los dos alumnos con mayor cantidad de autoevaluaciones con nota 10 (diez)
+// - Código de los dos alumnos con mayor cantidad de autoevaluaciones con nota 0 (cero)
+// Nota: recuerde que, para poder rendir el EXAMEN PARCIAL, el alumno deberá obtener “Presente” en al menos
+// el 75% del total de las autoevaluaciones propuestas. Se considera “Presente” la autoevaluación que se entrega
+// en tiempo y forma y con al menos el 40% de respuestas correctas.
+Program dos;
+var
+    
+begin
+    
+end.
