@@ -1,0 +1,141 @@
+// 6. El Observatorio Astronómico de La Plata ha realizado un relevamiento sobre los distintos objetos
+// astronómicos observados durante el año 2015. Los objetos se clasifican en 7 categorías: 1: estrellas, 2:
+// planetas, 3: satélites, 4: galaxias, 5: asteroides, 6: cometas y 7: nebulosas.
+// Al observar un objeto, se registran los siguientes datos: código del objeto, categoría del objeto (1..7),
+// nombre del objeto, distancia a la Tierra (medida en años luz), nombre del descubridor y año de su
+// descubrimiento.
+// A. Desarrolle un programa que lea y almacene la información de los objetos que han sido observados.
+// Dicha información se lee hasta encontrar un objeto con código -1 (el cual no debe procesarse). La
+// estructura generada debe mantener el orden en que fueron leídos los datos.
+// B. Una vez leídos y almacenados todos los datos, se pide realizar un reporte con la siguiente
+// información:
+// 1. Los códigos de los dos objetos más lejanos de la tierra que se hayan observado.
+// 2. La cantidad de planetas descubiertos por "Galileo Galilei" antes del año 1600.
+// 3. La cantidad de objetos observados por cada categoría.
+// 4. Los nombres de las estrellas cuyos códigos de objeto poseen más dígitos pares que impares.
+
+
+Program seis;
+Const
+    cantcateg = 7; // Para poder cambiar las categorias si descubrimos otro objeto
+Type
+    vectorCategoria = array [1..cantcateg] of integer;
+    objeto = record
+        cod:integer;
+        cat:1..cantcateg;
+        nombre:string;
+        distancia:real;
+        descubridor:string;
+        anio:integer;
+    end;
+    lista = ^nodo;
+    nodo = record
+        dato:objeto;
+        sig:lista;
+    end;
+Var
+    l:lista;
+    maslejano,maslejano2,bygalileo:integer;
+    v:vectorCategoria;
+Begin
+    l:=nil;
+    cargarObjeto(l);
+    reportarObjetos(l,maslejano,maslejano2,bygalileo,v);
+End.
+
+// Procedures
+Procedure leerObjeto(var o:objeto);
+begin
+    readln(o.cod);
+    if(o.cod <> -1) then begin
+        readln(o.cat);
+        readln(o.nombre);
+        readln(o.distancia);
+        readln(o.descubridor);
+        readln(o.anio);
+    end;
+end;
+
+Procedure cargarObjeto(var l:lista);
+var
+    nue,ult:lista;
+    o:objeto;
+begin
+    leerObjeto(o);
+    while (o.cod <> -1) do begin
+        new(nue);
+        nue^.dato:= o;
+        nue^.sig:= nil;
+        if (l=nil) then begin
+            l:=nue;
+            ult:=nue;
+        end
+        else begin
+            ult^.sig:=nue;
+            ult:=nue;
+        end;
+        leerObjeto(o);
+    end;
+end;
+
+Procedure chequearmaximo(var dist1,dist2:real;var maslejano,maslejano2:integer;distancia,codigo:integer);
+begin
+    if(distancia >= dist1) then begin
+        dist2:=dist1;
+        maslejano2:=maslejano;
+        dist1:=distancia;
+        maslejano:=codigo;
+    end
+    else begin
+        if (distancia > dist2) then begin
+            dist2:=distancia;
+            maslejano2:=codigo;
+        end;
+    end;
+end;
+
+
+Function esGalileo(o:objeto):boolean;
+begin
+    if(o.cat=2)then esGalileo:=(o.descubridor = 'Galileo Galilei') and (o.anio < 1600) else esGalileo:=false;
+end;
+Procedure inicializarVector(var v:vectorCategoria);
+var
+i:integer;
+begin
+    for i:=1 to cantcateg do v[i]:=0;
+end;
+
+Function descomponer(codigo:integer):boolean;
+var
+par,impar:integer;
+begin
+    par:=0;impar:=0;
+    while(codigo<>0) do begin
+        if((codigo MOD 10) mod 2 = 0) then par:=par+1 else impar:=impar+1;
+        codigo:=codigo DIV 10;
+    end;
+    descomponer:=(par>impar);
+end;
+
+Procedure reportarObjetos(l:lista;var maslejano,maslejano2,bygalileo:integer;var v:vectorCategoria);
+var
+    codigo,i:integer;
+    distancia,dist1,dist2:real;
+begin
+    dist1:=0;dist2:=0; // Inicializo mis auxiliares para buscar máximos
+    bygalileo:=0;
+    inicializarVector(v);
+    while (l<>nil) do begin
+        distancia:=l^.dato.distancia;
+        codigo:=l^.dato.cod;
+        chequearmaximo(dist1,dist2,maslejano,maslejano2,distancia,codigo);
+        if(esGalileo(l^.dato)) then bygalileo:=bygalileo+1;
+        v[l^.dato.cat]:=v[l^.dato.cat]+1;
+        if((l^.dato.cat = 1) and descomponer(codigo)) then writeln('El objeto ',l^.dato.nombre,' tiene un código con más números pares que impares.');
+        l:=l^.sig;
+    end;
+    writeln('Los planetas más alejados son los de código ',maslejano,' y ',maslejano2);
+    writeln('La cantidad de planetas descubiertos por Galileo Galilei antes del 1600 es de ',bygalileo);
+    for i:=1 to cantcateg do writeln('La cantidad de planetas de categoría ',i,' es de ',v[i]);
+end;

@@ -1,0 +1,49 @@
+// 4. Una maternidad dispone información sobre sus pacientes. De cada una se conoce: nombre, apellido y peso
+// registrado el primer día de cada semana de embarazo (a lo sumo 42). La maternidad necesita un programa
+// que analice esta información, determine e informe:
+// a. Para cada embarazada, la semana con mayor aumento de peso.
+// b. El aumento de peso total de cada embarazada durante el embarazo.
+//////////////////////////////////////
+//(SIN TERMINAR: En la clase de consulta nos dijeron que si queremos nos podemos saltear 
+//ese porque esta mal redactado y es complicado que tomen algo asi)
+//////////////////////////////////////
+Program cuatro;
+type
+    persona = record
+        nombrecompl:string;
+        peso:array[1..42] of real;
+    end;
+    lista = ^nodo;
+    nodo = record
+        dato:persona;
+        sig:lista;
+    end;
+Var
+    l:lista;
+    p:persona;
+// Proceso #1: sacar la semana con mayor aumento de peso.
+Procedure buscarDif(l:lista);
+var
+    pesoant;pesoact;dif:real;
+    semana,i:integer;
+begin
+    while (l<>nil) do begin
+        dif:=0;
+        pesoant:=l^.dato.peso[1];
+        for i:=2 to 42 do begin
+            if(peso[i] <> nil) then begin
+                pesoact:= l^.dato.peso[i];
+                if (pesoact - pesoant) > dif then begin
+                    dif:=pesoact - pesoant
+                    semana:=i;
+                end;
+                pesoant:=pesoact;
+            end;
+        end;
+    end;
+end;
+
+Begin
+    cargarLista(l,p); // Se dispone
+    buscarDif(l)
+End.

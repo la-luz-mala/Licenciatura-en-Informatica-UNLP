@@ -1,0 +1,144 @@
+// 5. Una empresa de transporte de cargas dispone de la información de su flota compuesta por 100 camiones.
+// De cada camión se tiene: patente, año de fabricación y capacidad (peso máximo en toneladas que puede
+// transportar).
+// Realizar un programa que lea y almacene la información de los viajes realizados por la empresa. De cada
+// viaje se lee: código de viaje, código del camión que lo realizó (1..100), distancia en kilómetros recorrida,
+// ciudad de destino, año en que se realizó el viaje y DNI del chofer. La lectura finaliza cuando se lee el código
+// de viaje -1.
+// Una vez leída y almacenada la información, se pide:
+// 1. Informar la patente del camión que más kilómetros recorridos posee y la patente del camión que
+// menos kilómetros recorridos posee.
+// 2. Informar la cantidad de viajes que se han realizado en camiones con capacidad mayor a 30,5 toneladas
+// y que posean una antigüedad mayor a 5 años al momento de realizar el viaje (año en que se realizó el
+// viaje).
+// 3. Informar los códigos de los viajes realizados por choferes cuyo DNI tenga sólo dígitos impares.
+// Nota: Los códigos de viaje no se repiten.
+
+// DISPONE - no hace falta cargar la info pero sí declarar el tipo, variable e invocar el módulo hipotético
+
+Program cinco;
+Const
+    cantCamiones = 100;
+Type
+    camion = record
+        patente:integer;
+        fabricacion:integer;
+        capacidad:real;
+    end;
+    codigosCamion = 1..cantCamiones;
+    vectorCamiones = array [codigosCamion] of camion;
+    viaje = record
+        codViaje:integer;
+        codCamion:codigosCamion;
+        kmsrecorridos:real;
+        destino:string;
+        anioviaje:integer;
+        dnichofer:integer;
+    end;
+    lista = ^nodo;
+    nodo = record
+        dato:viaje;
+        sig:lista;
+    end;
+    kmscamiones = array[codigosCamion] of real;
+Var
+    l:lista;
+    c:vectorCamiones;
+    pmax,pmin:integer;
+    kmporcodigo:kmscamiones;
+    gryvi:integer;
+Begin
+    l:=nil;
+    cargarCamiones(c) // Se dispone
+    cargarViajes(l);// leer viajes hasta que viaje es -1
+    
+    recorrerlista(l,pmax,pmin,kmporcodigo,c,gryvi); // 1. recorrer e informar la patente que mas kms tiene y la que menos tiene (max y min) y 2. si capacidad > 30.5 ton y (año de viaje - año de fabricación > 5) then sumar un contador
+    // 3. por cada viaje descomponer el dni del chofer a ver si es impar. Si es, meter el codigo a una listacodigos
+End.
+
+Procedure leerviaje(var v:viaje);
+begin
+    readln(v.codViaje);
+    if(v.codViaje <> -1) then begin // Corte para no leer todos los otros códigos innecesariamente
+        readln(v.codCamion);
+        readln(v.kmsrecorridos);
+        readln(v.destino);
+        readln(v.anioviaje);
+        readln(v.dnichofer);
+    end;
+end;
+
+Procedure cargarViajes(var l:lista); // Agregaradelante
+var
+    v:viaje;
+    nue:lista;
+begin
+    leerviaje(v);
+    while (v.codViaje <> -1) do begin
+        new(nue);
+        nue^.dato:=v;
+        nue^.sig:=nil;
+        if (l=nil) then
+            l:=nue;
+        else begin
+            nue^.sig := l;
+            l:= nue;
+        end;
+        leerviaje(v);
+    end;
+end;
+
+procedure inicializarVector(var kms:kmscamiones); // Inicializo un vector en 0 para no sumar sobre basura.
+var i:integer;
+begin
+    for i:=1 to cantCamiones do kms[i]:=0;
+end;
+
+Procedure actualizarminmax(var kmmax,kmmin:real;var pmax,pmin: integer;kms:real;patente:integer); // Actualizo los mínimos y máximos
+begin
+    if (kms > kmmax) then begin
+        kmmax:=kms;
+        pmax:= patente;
+    end;
+    if (kms < kmmin) then begin
+        kmmin:=kms;
+        pmin:=patente;
+    end;
+end;
+
+Procedure grandesyviejos(l:lista,c:vectorCamiones,var gryvi:integer);
+var
+codActual, anioviaje: integer;
+begin
+    codActual:=l^.dato.codCamion;
+    anioviaje:=l^.dato.anioviaje;
+    if ((c[codActual].capacidad) > 30.5) then
+        if ((anioviaje - c[codActual].fabricacion) > 5) then gryvi:=gryvi+1;
+end;
+Function dniimpares(l:lista):boolean;
+var
+    aux:integer;
+begin
+    aux:=l^.dato.dnichofer;
+    while (aux <> 0) and ((aux mod 10) mod 2 <> 0) do aux:=aux DIV 10;
+    dniimpares:=(aux=0)
+end;
+
+Procedure recorrerlista(l:lista,var pmax,pmin,gryvi:integer,kms:kmscamiones,c:vectorCamiones); // Procedure principal para revisar mínimos y máximos.
+var
+    kmmax,kmmin:real;
+    patenteAct:integer;    
+    codActual:integer;
+begin
+    inicializarVector(kms);
+    gryvi:=0; // Contador de camiones grandes y viejos
+    kmmax:=0;kmmin:=9999;
+    while (l <> nil) do begin
+        patenteAct:= c[l^.dato.codCamion].patente;
+        kms[l^.dato.codCamion]:= kms[l^.dato.codCamion] + l^.dato.kmsrecorridos;
+        actualizarminmax(kmmax,kmmin,pmax,pmin,kms[l^.dato.codCamion],patenteAct);
+        grandesyviejos(l,c,gryvi);
+        if (dniimpares(l)) then writeln('El viaje ',l^.dato.codViaje,' fue realizado por un chofer de DNI solo con dígitos impares.');
+        l := l^.sig;
+    end;
+end;

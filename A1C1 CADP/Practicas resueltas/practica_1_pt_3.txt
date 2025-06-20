@@ -97,7 +97,10 @@ end.
 // en tiempo y forma y con al menos el 40% de respuestas correctas.
 Program dos;
 var
-    
+    legajo,nota:integer;
+    condicion:char;
 begin
-    
+    read()
+    mientras legajo <> -1 
+    leer otros datos
 end.

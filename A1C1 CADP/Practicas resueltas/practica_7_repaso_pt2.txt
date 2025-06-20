@@ -1,0 +1,124 @@
+// 2. Implementar un programa que lea y almacene información de clientes de una empresa aseguradora
+// automotriz. De cada cliente se lee: código de cliente, DNI, apellido, nombre, código de póliza contratada
+// (1..6) y monto básico que abona mensualmente. La lectura finaliza cuando llega el cliente con código 1122,
+// el cual debe procesarse.
+// La empresa dispone de una tabla donde guarda un valor que representa un monto adicional que el cliente
+// debe abonar en la liquidación mensual de su seguro, de acuerdo al código de póliza que tiene contratada.
+// Una vez finalizada la lectura de todos los clientes, se pide:
+// a. Informar para cada cliente DNI, apellido, nombre y el monto completo que paga mensualmente por su
+// seguro automotriz (monto básico + monto adicional).
+// b. Informar apellido y nombre de aquellos clientes cuyo DNI contiene al menos dos dígitos 9.
+// c. Realizar un módulo que reciba un código de cliente, lo busque (seguro existe) y lo elimine de la
+// estructura.
+
+Program dos;
+Type
+    cliente = record
+        cod:integer;
+        dni:integer;
+        nomyap:string;
+        poliza:1..6;
+        precio:integer;
+    end;
+    lista = ^nodo;
+    nodo = record
+        dato:cliente;
+        sig:lista;
+    end;
+
+Var
+    ult,l:lista;
+    c:cliente;
+    dni9:integer;
+
+// Modulo para cargar datos de clientes
+Procedure cargarcliente(var c:cliente);
+begin
+    writeln('Ingrese código del cliente');
+    readln(c.cod);
+    writeln('Ingrese DNI');
+    readln(c.dni);
+    writeln('Ingrese nombre y apellido');
+    readln(c.nomyap);
+    writeln('Ingrese código de la póliza (1-6)');
+    readln(c.poliza);
+    writeln('Ingrese precio');
+    readln(c.precio);
+end;
+
+// Modulo para agregar atrás
+Procedure agregaratras(var l,ult:lista;c:cliente;)
+var
+    aux:lista;
+begin
+    new(aux);
+    aux.dato:=c;
+    aux.sig:=nil;
+    if (l=nil) then begin
+        l:=aux;
+        ult:=aux;
+    end
+    else begin
+        ult^.sig:=aux;
+        ult:=aux;
+    end;
+end;
+
+// Modulo para informar DNIs con dos 9s o más:
+Function descomponer(dni:integer):boolean;
+var
+    nueves:integer;
+begin
+    nueves:=0;
+    while (dni <> 0) and (nueves < 2) do begin
+        if ((dni MOD 10) = 9) then nueves:=nueves+1;
+        dni:=dni div 10;
+    end;
+    descomponer:=(nueves=2);
+end;
+
+// Modulo para informar datos del cliente
+Procedure informar(l:lista);
+var
+    valorextra: array[1..6] of integer;
+    dni9,montototal:integer;
+    aux:cliente;
+begin
+    cargartabla(valorextra); // Se dispone
+    dni9:=0;
+    while (l<>nil) do begin
+        aux:=l^.dato;
+        writeln('DNI: ',aux.dni);
+        writeln('Nombre: ',aux.nomyap);
+        montotal:= aux.precio + valorextra[aux.poliza];
+        writeln('Monto total: ',montotal);
+        if(descomponer(aux.dni) = true) then dni9:=dni9+1;
+        l:=l^.sig;
+    end;
+    writeln('La cantidad de personas con dos 9s o más en el DNI es de ',dni9);
+end;
+
+// Procedure para buscar y eliminar
+Procedure eliminar(var l:lista;codigo:integer);
+var
+    aux,ant:lista;
+begin
+    aux:=l;
+    while (aux^.dato.cod <> codigo) do begin
+        ant:=aux;
+        aux:=aux^.sig;
+    end;
+    ant^.sig:= aux^.sig;
+    writeln('Cliente código ',codigo,' eliminado');
+end;
+
+Begin
+    l:=nil;
+    ult:=nil;
+    repeat
+        cargarcliente(c);
+        agregaratras(l,ult,c);
+    until (c.cod = 1122);
+    informar(l);
+    eliminar(1122);
+End.

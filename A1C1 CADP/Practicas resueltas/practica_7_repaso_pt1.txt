@@ -1,0 +1,146 @@
+// 1. Una productora nacional realiza un casting de personas para la selección de actores extras de una nueva
+// película, para ello se debe leer y almacenar la información de las personas que desean participar de dicho
+// casting. De cada persona se lee: DNI, apellido y nombre, edad y el código de género de actuación que
+// prefiere (1: drama, 2: romántico, 3: acción, 4: suspenso, 5: terror). La lectura finaliza cuando llega una
+// persona con DNI 33555444, la cual debe procesarse.
+// Una vez finalizada la lectura de todas las personas, se pide:
+// a. Informar la cantidad de personas cuyo DNI contiene más dígitos pares que impares.
+// b. Informar los dos códigos de género más elegidos.
+// c. Realizar un módulo que reciba un DNI, lo busque y lo elimine de la estructura. El DNI puede no existir.
+// Invocar dicho módulo en el programa principal.
+Program uno;
+//Tipos
+Type
+        persona=record // esto va a ir a l^.dato
+        dni:integer;
+        nombre:string;
+        edad:integer;
+        genero:1..5;
+    end;
+    lista= ^nodo; // el tipo principal de lista
+    nodo= record
+        dato:persona; // aca va persona
+        sig:lista; // esto apunta al sgte nodo
+    end;
+
+// Variables
+Var
+    p:persona;
+    l:lista;
+    maxG1,maxG2,dniE,par:integer;
+
+// Procedure LEER para cargar personas
+Procedure leerP(var p:persona);
+    begin
+        writeln('Ingrese DNI');
+        readln(p.dni);
+        writeln('Ingrese nombre y apellido');
+        readln(p.nombre);
+        writeln('Ingrese edad');
+        readln(p.edad);
+        writeln('Ingrese género preferido (1-5)');
+        readln(p.genero);
+    end;
+// Procedure para agregar nodos a la lista
+Procedure agregarAdelante(var l:lista; p:persona);
+var
+    aux:lista;
+begin
+    new(aux);
+    aux^.dato:= p;
+    aux^.sig:= l;
+    l:= aux;
+end;
+// Procedure para recorrer y descomponer el DNI en pares / impares
+Procedure recorrer(l:lista; var par:integer);
+var
+    auxDni:longint;
+    i,auximpar,auxpar:integer;
+begin
+    par:=0;
+    auximpar:=0;
+    auxpar:=0;
+    while (l <> nil) do begin
+        auxDni:= l^.dato.dni;
+        for i:=1 to 8 do begin
+            if ((auxDni mod 2) = 1) then
+                auximpar:=auximpar+1
+            else
+                auxpar:=auxpar+1
+        end;
+        if(auxpar > auximpar) then par:=par+1;
+        l:= l^.sig;
+    end;
+end;
+
+// Obtener los géneros más elegidos
+Procedure maxGenero(l:lista;var maxG1,maxG2:integer);
+var
+    generos:array[1..5] of integer;
+    max1,max2,gen1,gen2,i:integer;
+begin
+    max1:=-1;max2:=-1;gen1:=0;gen2:=0;
+    for i := 1 to 5 do
+        generos[i] := 0;
+    while(l<>nil) do begin
+        generos[l^.dato.genero]:= generos[l^.dato.genero] +1;
+        l:=l^.sig;
+    end;
+    for i:=1 to 5 do begin
+        if (generos[i] > max1) then begin
+            max2:=max1;
+            gen2:=gen1;
+            max1:=generos[i];
+            gen1:=i;
+        end
+        else if (generos[i]>max2) then begin
+            max2:=generos[i];
+            gen2:=i;
+        end;
+    end;
+    maxG1:=gen1;
+    maxG2:=gen2;
+end;
+
+// Buscar y eliminar
+Procedure eliminar(var l:lista; dniE:integer);
+var
+ant,act:lista;
+begin
+    act:=l;
+    while (act<>nil) and (act^.dato.dni <> dniE) do begin
+        ant:=act;
+        act:=act^.sig;
+    end;
+    if (act<> nil) then begin
+        if(act=l) then
+            l:=l^.sig
+        else
+            ant^.sig:=act^.sig;
+        dispose(act);
+        writeln('DNI ',dniE,' eliminado.')
+    end
+    else writeln('El dato no se encontró.');
+end;
+
+// Programa principal
+Begin
+    // Cargo la lista
+    repeat
+        leerP(p);
+        agregarAdelante(l,p);
+    until l^.dato.dni = 33555444;
+    // Recorro la lista e informo.
+    recorrer(l,par);
+    writeln('Hay una cantidad de ',par,' personas con más dígitos pares que impares en el DNI');
+
+    // Recorro la lista e informo
+    maxGenero(l,maxG1,maxG2);
+    writeln('Los géneros favoritos son: ',maxG1,' y ',maxG2);
+
+    // Busco y elimino
+    dniE:=0;
+    writeln('Ingrese un DNI a eliminar:');
+    readln(dniE);
+    eliminar(l,dniE);
+End.

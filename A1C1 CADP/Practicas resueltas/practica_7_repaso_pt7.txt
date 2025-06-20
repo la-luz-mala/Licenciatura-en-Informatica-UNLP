@@ -1,0 +1,192 @@
+// 7. La Facultad de Informática desea procesar la información de los alumnos que finalizaron la carrera de
+// Analista Programador Universitario. Para ello se deberá leer la información de cada alumno, a saber:
+// número de alumno, apellido, nombres, dirección de correo electrónico, año de ingreso, año de egreso y las
+// notas obtenidas en cada una de las 24 materias que aprobó (los aplazos no se registran).
+// 1. Realizar un módulo que lea y almacene la información de los alumnos hasta que se ingrese el alumno
+// con número de alumno -1, el cual no debe procesarse. Las 24 notas correspondientes a cada alumno
+// deben quedar ordenadas de forma descendente.
+// 2. Una vez leída y almacenada la información del inciso 1, se solicita calcular e informar:
+// a. El promedio de notas obtenido por cada alumno.
+// b. La cantidad de alumnos ingresantes 2012 cuyo número de alumno está compuesto únicamente
+// por dígitos impares.
+// c. El apellido, nombres y dirección de correo electrónico de los dos alumnos que más rápido se
+// recibieron (o sea, que tardaron menos años)
+// 3. Realizar un módulo que, dado un número de alumno leído desde teclado, lo busque y elimine de la
+// estructura generada en el inciso 1. El alumno puede no existir.
+
+Program siete;
+Const
+    materias = 24;
+Type
+    arraynota= array[1..materias] of integer;
+    alumno = record
+        num:integer;
+        apellido:string;
+        nombres:string;
+        email:string;
+        ingreso:integer;
+        egreso:integer;
+        notas:arraynota;
+    end;
+    lista = ^nodo;
+    nodo = record
+        dato:alumno;
+        sig:lista;
+    end;
+Var
+    l:lista;
+Begin
+    l:=nil;
+    cargarAlumno(l);
+    calculoeinforme(l);
+    eliminarAlumno(l);
+End.
+
+Procedure inicializarVector(var v:arraynota);
+var
+    i:integer;
+begin
+    for i:=1 to materias do v[i]:=0;
+end;
+Procedure insertarnotaordenada(nota:integer;var notas:arraynota;var diml:integer);
+var
+    i,j:integer;    
+begin
+    if (diml < materias) then begin
+        i:=1;
+        while(i <= diml) and (nota < notas[i]) do
+            i:=i+1;
+        for j:=diml downto i do
+            notas[j+1]:=notas[j];
+        notas[i]:=nota;
+        diml:=diml+1;
+    end
+end;
+
+Procedure leerAlumno(var a:alumno);
+var
+    i,diml,nota:integer;
+begin
+    inicializarVector(a.notas);
+    readln(a.num);
+    if(a.num <> -1) then begin
+        readln(a.apellido);
+        readln(a.nombres);
+        readln(a.email);
+        readln(a.ingreso);
+        readln(a.egreso);
+        diml:=0;
+        for i:=1 to materias do begin
+            readln(nota);
+            insertarnotaordenada(nota,a.notas,diml);
+        end;
+    end;
+end;
+Procedure cargarAlumno(var l:lista);
+var
+    a:alumno;
+    nue:lista;
+begin
+    leerAlumno(a);
+    while(a.num <> -1) do begin
+        new(nue);
+        nue^.dato:=a;
+        nue^.sig:=nil;
+        if (l=nil) then l:=nue else
+        begin
+            nue^.sig:=l;
+            l:=nue;
+        end;
+        leerAlumno(a);
+    end;
+end;
+
+Procedure calcularPromedio(a:alumno);
+var
+    i,aux:integer;
+begin
+    aux:=0;
+    for i:=1 to materias do
+        aux:=aux + a.notas[i];
+    aux:= aux / materias;
+    writeln('El promedio de ',a.nombres,' ',a.apellido,' es de ',aux);
+end;
+Function espar(a:alumno):boolean;
+var
+    num:integer;
+    par:boolean;
+begin
+    num:=a.num;
+    if (a.ingreso = 2012) then begin
+        par:=false;
+        while(num <> 0) and (par=false) do begin
+            par:=((num MOD 10)MOD 2) = 0;
+            num:=num DIV 10;
+        end;
+    espar:=par;
+end;
+
+Procedure calcularmin(var min,min2:integer;a:alumno;var alumin,alumin2:alumno);
+var
+    aux:integer;
+begin
+    aux:= (a.egreso - a.ingreso);
+    if(aux < min) then begin
+        min2:=min;
+        alumin2:=alumin;
+        min:=aux;
+        alumin:=a;
+    end else
+    begin
+        if(aux < min2) then begin
+            min2:=aux;
+            alumin2:=a;
+        end;
+    end;
+end;
+
+Procedure calculoeinforme(l:lista);
+var
+    alumin,alumin2,alu:alumno;
+    impares2012:integer;
+    min,min2:integer;
+begin
+    impares2012:=0;
+    min:=999;min2:=999;
+    while (l <> nil) do begin
+        alu:=l^.dato;
+        calcularPromedio(alu);
+        if(espar(alu)=false) then impares2012:=impares2012+1;
+        calcularmin(min,min2,alu,alumin,alumin2);
+        l:=l^.sig;
+    end;
+    writeln('La cantidad de alumnos ingresantes 2012 con nº de alumno compuesto de impares es de ',impares2012);
+    writeln('Los alumnos que menos tardaron en recibirse fueron:');
+    writeln(alumin.apellido,', ',alumin.nombres,', email: ',alumin.email);
+    writeln(alumin2.apellido,', ',alumin2.nombres,', email: ',alumin2.email);
+end;
+
+Procedure eliminarAlumno(var l:lista);
+var
+    a:integer;
+    ant,act:lista;
+begin
+    writeln('Ingrese el número de alumno a eliminar');
+    readln(a);
+    ant:=l;
+    act:=l;
+    while(act <> nil) and (act^.dato.num <> a) do begin
+        ant:=act;
+        act:=act^.sig;
+    end;
+    if(act = NIL) then writeln('El alumno no se encontró')
+    else
+    begin
+        if (act = l) then
+            l:=l^.sig;
+        else
+            ant^.sig := act^.sig;
+        dispose(act);
+        writeln('El alumno se eliminó');
+    end;
+end;
