@@ -19,6 +19,6 @@
 
 <!--&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&-->
 
-### Este repo contiene el material de Licenciatura en Informática, año 2024, Universidad Nacional de La Plata.
+### Este repo contiene el material de Licenciatura en Informática, año 2024/2025, Universidad Nacional de La Plata.
 ### Lo voy actualizando a medida que curso, así que sí, faltan materias.
 ### Contribuciones vía pull request ✨
