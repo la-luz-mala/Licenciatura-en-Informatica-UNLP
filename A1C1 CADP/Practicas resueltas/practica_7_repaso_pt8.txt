@@ -15,3 +15,70 @@
 // c) Calcular e informar cuál es el código de motivo que más transferencias a terceros tuvo.
 // d) Calcular e informar la cantidad de transferencias a terceros realizadas en el mes de Junio en las cuales
 // el número de cuenta destino posea menos dígitos pares que impares.
+
+Program ocho;
+Const
+    tipoCuenta=7;
+Type
+    vectorCuenta=array[1..tipoCuenta] of integer;
+    cuenta: record
+        numorigen:integer;
+        dniorigen:integer;
+        numdestino:integer;
+        dnidestino:integer;
+        fecha:string;
+        hora:string;
+        monto:real;
+        codigo:vectorCuenta;
+    end;
+    lista = ^nodo;
+    nodo = record
+        dato:cuenta;
+        nodo:lista;
+    end;
+Var
+    t,tt:lista;
+Begin
+    t:=nil;
+    tt:=nil;
+    cargarTransferencias(t); // Se dispone
+    transfTerceros(t,tt); // Filtro T e inserto ordenado TT
+    calculareinformar(tt); // Realizo el resto de los incisos
+End.
+
+Procedure transfTerceros(t:lista;var tt:lista);
+var
+    ant,act,nue:lista;
+begin
+    act:=tt;
+    ant:=nil;
+    while (t <> nil) and (t^.dato.dniorigen <> t^.dato.dnidestino) do begin
+        new(nue);
+        nue^.dato := t^.dato;
+        nue^.sig := nil;
+
+        if (ant = nil) and (act = nil) then tt:=nue //es el unico nodo
+        else begin
+            while (nue^.dato.numorigen > act^.dato.numorigen) then begin
+                ant:= act;
+                act:= act^.sig;
+            end;
+            if (ant=nil) then begin // es más chico que el primer nodo
+                nue^.sig:=tt^.sig;
+                tt:=nue;
+            end
+            else
+            begin
+                if (act = nil) then begin // está ultimo
+                    ant^.sig:=nue;
+                end
+                else // esta en el medio
+                begin
+                    ant^.sig := nue;
+                    nue^.sig:= act;
+                end;
+            end;
+        end;
+        
+    end;
+end
